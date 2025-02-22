@@ -23,5 +23,3 @@ features:
     details: Lorem ipsum dolor sit amet, consectetur adipiscing elit
 ---
 
-テスト
-２回目ビルド
