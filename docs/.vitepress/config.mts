@@ -2,7 +2,7 @@ import { defineConfig } from 'vitepress'
 
 // VitePressのサイト設定を定義します
 export default defineConfig({
-	base: "/docs/",
+	base: "/masakinihirota-docs/", // サイトがサブパスで提供される場合のベースパス
 	title: "masakinihirota", // サイトのタイトル
 	description: "docs masakinihirota", // サイトの説明
 	themeConfig: {
