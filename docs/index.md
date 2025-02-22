@@ -23,3 +23,12 @@ features:
     details: Lorem ipsum dolor sit amet, consectetur adipiscing elit
 ---
 
+```js{4}
+export default {
+  data () {
+    return {
+      msg: 'Highlighted!'
+    }
+  }
+}
+```
