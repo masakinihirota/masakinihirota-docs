@@ -1,0 +1,63 @@
+name: Deploy VitePress site to Pages
+
+on:
+  # `main` ブランチへのプッシュ時に実行されます。デフォルトブランチが `master` の場合は変更してください。
+  push:
+    branches: [main]
+
+  # Actions タブから手動でこのワークフローを実行できるようにします。
+  workflow_dispatch:
+
+# GITHUB_TOKEN の権限を設定して GitHub Pages へのデプロイを許可します。
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# 1つのデプロイメントのみを許可し、進行中の実行と最新のキューの間にキューされた実行をスキップします。
+# ただし、進行中の実行はキャンセルせず、これらの本番デプロイメントが完了するようにします。
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  # ビルドジョブ
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # lastUpdated が有効でない場合は不要
+      # - uses: pnpm/action-setup@v3 # pnpm を使用している場合はこのブロックをコメント解除
+      #   with:
+      #     version: 9 # package.json に "packageManager" を設定している場合は不要
+      # - uses: oven-sh/setup-bun@v1 # Bun を使用している場合はコメント解除
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm # または pnpm / yarn
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
+      - name: Install dependencies
+        run: npm ci # または pnpm install / yarn install / bun install
+      - name: Build with VitePress
+        run: npm run docs:build # または pnpm docs:build / yarn docs:build / bun run docs:build
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: docs/.vitepress/dist
+
+  # デプロイジョブ
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    needs: build
+    runs-on: ubuntu-latest
+    name: Deploy
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
