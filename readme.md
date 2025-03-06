@@ -1,4 +1,5 @@
 masakinihirotaのドキュメント用
+vitepressで書きます。
 
 Qiita
 vitepress入門 GitHub Pagesにデプロイ、公開するまで。 静的サイトジェネレーター #GithubPages - Qiita
